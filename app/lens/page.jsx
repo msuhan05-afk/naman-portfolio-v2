@@ -5,7 +5,22 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import dynamic from "next/dynamic";
 
-const LottieScene = dynamic(() => import("@/components/LottieScene"), { ssr: false });
+const LottieScene  = dynamic(() => import("@/components/LottieScene"),  { ssr: false });
+const ImageTrail   = dynamic(() => import("@/components/ImageTrail").then(m => ({ default: m.ImageTrail })), { ssr: false });
+
+// Picsum images for the trail — replace with your own photos
+const TRAIL_IMAGES = [
+  "https://picsum.photos/id/287/600/600",
+  "https://picsum.photos/id/1001/600/600",
+  "https://picsum.photos/id/1025/600/600",
+  "https://picsum.photos/id/1026/600/600",
+  "https://picsum.photos/id/1027/600/600",
+  "https://picsum.photos/id/1028/600/600",
+  "https://picsum.photos/id/1029/600/600",
+  "https://picsum.photos/id/1030/600/600",
+  "https://picsum.photos/id/1031/600/600",
+  "https://picsum.photos/id/1032/600/600",
+];
 
 if (typeof window !== "undefined") gsap.registerPlugin(ScrollTrigger);
 
@@ -64,30 +79,36 @@ export default function Lens() {
 
   return (
     <main ref={rootRef}>
-      {/* ── Hero — dark ── */}
-      <section className="section-dark relative min-h-[65svh] flex flex-col justify-end px-6 md:px-10 pb-[10vh] overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute right-[-5%] top-[-5%] w-[60vw] h-[60vw]"
-            style={{ background: "radial-gradient(circle, rgba(237,232,208,0.05) 0%, transparent 60%)", filter: "blur(90px)" }} />
+      {/* ── Hero — dark, full-bleed ImageTrail ── */}
+      <section className="section-dark relative overflow-hidden" style={{ height: "100svh" }}>
+
+        {/* ImageTrail fills the full hero */}
+        <div className="absolute inset-0 z-10">
+          <ImageTrail items={TRAIL_IMAGES} variant={3} threshold={70} />
         </div>
 
+        {/* Ghost text */}
         <div className="absolute bottom-0 left-0 pointer-events-none select-none overflow-hidden"
           style={{ fontSize: "clamp(5rem, 16vw, 16rem)", lineHeight: 0.85, fontFamily: "Space Grotesk, sans-serif",
             fontWeight: 700, color: "rgba(237,232,208,0.03)", letterSpacing: "-0.05em" }}>
           LENS
         </div>
 
-        <div className="relative z-10 max-w-[1440px] w-full mx-auto">
-          <p className="ln-meta text-[10px] uppercase tracking-[0.32em] text-bone/40 mb-8">Photography & Film</p>
-          <h1 className="font-display font-semibold text-bone leading-[0.9] tracking-tightest mb-6"
+        {/* Heading overlaid bottom-left, above trail */}
+        <div className="absolute bottom-[10vh] left-6 md:left-10 z-20 pointer-events-none">
+          <p className="ln-meta text-[10px] uppercase tracking-[0.32em] text-bone/40 mb-4">Photography & Film</p>
+          <h1 className="font-display font-semibold text-bone leading-[0.9] tracking-tightest"
             style={{ fontSize: "clamp(3rem, 9vw, 9rem)" }}>
-            {["Lens"].map((w, i) => (
-              <span key={i} className="word-clip mr-[0.14em]" style={{ display: "inline-block" }}>
-                <span className="ln-word inline-block">{w}</span>
-              </span>
-            ))}
+            <span className="word-clip" style={{ display: "inline-block" }}>
+              <span className="ln-word inline-block">Lens</span>
+            </span>
           </h1>
         </div>
+
+        {/* Hint */}
+        <p className="ln-meta absolute bottom-6 right-6 md:right-10 z-20 text-[10px] uppercase tracking-[0.28em] text-bone/25 pointer-events-none">
+          Move to reveal
+        </p>
       </section>
 
       {/* ── Tab toggle ── */}
